@@ -1,0 +1,4 @@
+*.pyc
+.idea/
+hubspot_connection.egg-info/
+
