@@ -15,8 +15,8 @@
 ##############################################################################
 
 from json import dumps as json_serialize
-from urlparse import parse_qs
-from urlparse import urlparse
+from urllib.parse import parse_qs
+from urllib.parse import urlparse
 
 from nose.tools import assert_dict_contains_subset
 from nose.tools import assert_equal

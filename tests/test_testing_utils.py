@@ -279,9 +279,9 @@ class TestMockPortalConnection(object):
 
 
 def _assert_dict_keys_and_values_are_unicode(dict_):
-    values = dict_.keys() + dict_.values()
+    values = list(dict_.keys()) + list(dict_.values())
     for value in values:
-        assert_is_instance(value, unicode)
+        assert_is_instance(value, str)
 
 
 class _ConstantCallable(object):

@@ -173,13 +173,13 @@ def _assert_request_matches_api_call(
 
 def _convert_object_strings_to_unicode(object_):
     if isinstance(object_, str):
-        object_converted = unicode(object_)
+        object_converted = str(object_)
     elif isinstance(object_, (list, tuple)):
         object_converted = \
             [_convert_object_strings_to_unicode(value) for value in object_]
     elif isinstance(object_, dict):
         object_converted = {}
-        for key, value in object_.items():
+        for key, value in list(object_.items()):
             object_converted[_convert_object_strings_to_unicode(key)] = \
                 _convert_object_strings_to_unicode(value)
     else:

@@ -14,15 +14,15 @@
 #
 ##############################################################################
 
-from httplib import ACCEPTED as HTTP_STATUS_ACCEPTED
-from httplib import NO_CONTENT as HTTP_STATUS_NO_CONTENT
-from httplib import OK as HTTP_STATUS_OK
-from httplib import UNAUTHORIZED as HTTP_STATUS_UNAUTHORIZED
+from http.client import ACCEPTED as HTTP_STATUS_ACCEPTED
+from http.client import NO_CONTENT as HTTP_STATUS_NO_CONTENT
+from http.client import OK as HTTP_STATUS_OK
+from http.client import UNAUTHORIZED as HTTP_STATUS_UNAUTHORIZED
 from json import dumps as json_serialize
-from urllib import urlencode
-from urlparse import parse_qs
-from urlparse import urlsplit
-from urlparse import urlunsplit
+from urllib.parse import urlencode
+from urllib.parse import parse_qs
+from urllib.parse import urlsplit
+from urllib.parse import urlunsplit
 
 from pkg_resources import get_distribution
 from pyrecord import Record
@@ -46,8 +46,8 @@ _USER_AGENT = 'HubSpot Python Client/' + _DISTRIBUTION_VERSION
 _HUBSPOT_ERROR_RESPONSE_SCHEMA = Schema(
     {
         'status': Constant('error'),
-        'message': unicode,
-        'requestId': unicode,
+        'message': str,
+        'requestId': str,
         },
     required=True,
     extra=True,
