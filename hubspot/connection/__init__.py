@@ -65,8 +65,7 @@ class PortalConnection(object):
     """
     Connection to HubSpot
 
-    :param authentication_key: This can be either an :class:`APIKey` or an \
-            :class:`OAuthKey` instance
+    :param authentication_key: This needs to be a private app access token (string)
     :param basestring change_source: The string passed to HubSpot as \
             ``auditId`` in the query string
     """
@@ -74,9 +73,7 @@ class PortalConnection(object):
 
     def __init__(self, authentication_key, change_source):
         super(PortalConnection, self).__init__()
-
-        self._authentication_handler = \
-            _QueryStringAuthenticationHandler(authentication_key)
+        self.authentication_key = authentication_key
         self._change_source = change_source
 
         self._session = Session()
@@ -156,6 +153,7 @@ class PortalConnection(object):
 
         request_headers = \
             {'content-type': 'application/json'} if body_deserialization else {}
+        request_headers['Authorization'] = 'Bearer ' + self.authentication_key
 
         if body_deserialization:
             request_body_serialization = json_serialize(body_deserialization)
@@ -166,7 +164,6 @@ class PortalConnection(object):
             method,
             url,
             params=query_string_args,
-            auth=self._authentication_handler,
             data=request_body_serialization,
             headers=request_headers,
             )
@@ -228,36 +225,6 @@ class PortalConnection(object):
 
     def __exit__(self, exc_type, exc_value, traceback):
         self._session.close()
-
-
-_AuthenticationKey = Record.create_type('_AuthenticationKey', 'key_value')
-
-OAuthKey = _AuthenticationKey.extend_type('OAuthKey')
-
-APIKey = _AuthenticationKey.extend_type('APIKey')
-
-
-class _QueryStringAuthenticationHandler(AuthBase):
-
-    _KEY_NAME_BY_AUTHN_TYPE = {
-        OAuthKey: 'access_token',
-        APIKey: 'hapikey',
-        }
-
-    def __init__(self, authentication_key, *args, **kwargs):
-        super(_QueryStringAuthenticationHandler, self).__init__(*args, **kwargs)
-
-        authentication_type = authentication_key.__class__
-        self._key_name = self._KEY_NAME_BY_AUTHN_TYPE[authentication_type]
-        self._key_value = authentication_key.key_value
-
-    def __call__(self, request):
-        request.url = _add_query_string_arg_to_url(
-            self._key_name,
-            self._key_value,
-            request.url,
-            )
-        return request
 
 
 def _add_query_string_arg_to_url(
